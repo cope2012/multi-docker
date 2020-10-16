@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t cope2012/react-rest -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run cope2012/react-rest npm test -- --coverage
+
+after_success:
+  - docker build -t cope2012/multi-client ./client
+  - docker build -t cope2012/multi-nginx ./nginx
+  - docker build -t cope2012/multi-server ./server
+  - docker build -t cope2012/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push cope2012/multi-client
+  - docker push cope2012/multi-nginx
+  - docker push cope2012/multi-server
+  - docker push cope2012/multi-worker
