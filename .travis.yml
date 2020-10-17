@@ -5,6 +5,9 @@ services:
 before_install:
   - docker build -t cope2012/react-rest -f ./client/Dockerfile.dev ./client
 
+script:
+  - docker run cope2012/react-rest npm test -- --coverage
+
 after_success:
   - docker build -t cope2012/multi-client ./client
   - docker build -t cope2012/multi-nginx ./nginx
