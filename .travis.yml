@@ -1,3 +1,5 @@
+language: generic
+
 sudo: required
 services:
   - docker
@@ -6,7 +8,7 @@ before_install:
   - docker build -t cope2012/react-rest -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run cope2012/react-rest npm test -- --coverage
+  - docker run -e CI=true USERNAME/react-test npm test
 
 after_success:
   - docker build -t cope2012/multi-client ./client
