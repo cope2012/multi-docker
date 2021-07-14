@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React, {Component} from 'react';
 import axios from 'axios';
 
 class Fib extends Component {
     state = {
         seenIndexes: [],
         values: {},
-        index: ''
+        index: '',
     };
 
     componentDidMount() {
@@ -23,50 +23,50 @@ class Fib extends Component {
         this.setState({seenIndexes: seenIndexes.data});
     }
 
-    handleSubmit = async (event) => {
-        event.preventDefault();
-
-        await axios.post('/api/values', {
-            index: this.state.index
-        });
-
-        this.setState({ index: '' });
-    };
-
     renderSeenIndexes() {
-        return this.state.seenIndexes.map(({ number }) => number).join(', ')
+        return this.state.seenIndexes.map(({number}) => number).join(', ');
     }
 
     renderValues() {
         const entries = [];
+
         for (let key in this.state.values) {
             entries.push(
                 <div key={key}>
                     For index {key} I calculated {this.state.values[key]}
                 </div>
-            )
+            );
         }
 
         return entries;
     }
 
+    handerSubmit() {    
+        axios.post('/api/values', {
+            index: this.state.index
+        }).then(() => this.setState({index: ''}));
+
+    };
+
     render() {
         return (
             <div>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={e => {e.preventDefault(); this.handerSubmit();}}>
                     <label>Enter your index:</label>
-                    <input type="text"
-                           value={this.state.index}
-                           onChange={event => this.setState({ index: event.target.value })}
+                    <input 
+                        value={this.state.index}
+                        onChange={event=>this.setState({index: event.target.value})}
                     />
                     <button>Submit</button>
                 </form>
-                <h3>Indexes I have seen:</h3>
+
+                <h3>Indexes that I've seen:</h3>
                 {this.renderSeenIndexes()}
+
                 <h3>Calculated values:</h3>
                 {this.renderValues()}
             </div>
-        )
+        );
     }
 }
 
